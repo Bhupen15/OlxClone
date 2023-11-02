@@ -1,12 +1,15 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, PermissionsAndroid, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, PermissionsAndroid, ScrollView, Platform, Modal, ActivityIndicator } from 'react-native'
+import React, { Children, useEffect, useRef, useState } from 'react'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch } from 'react-redux';
 import { addPost } from '../redux/PostSlice';
+import { Camera, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Add = ({ onPost }: any) => {
   const [selectedCategory, setSelectedCategory] = useState(0);
+  const { hasPermission, requestPermission } = useCameraPermission()
   const [photo, setPhoto] = useState<any>(
     {
       assets:
@@ -23,51 +26,101 @@ const Add = ({ onPost }: any) => {
         ]
     }
   )
+  requestPermission();
+
   const [price, setPrice] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const dispatch = useDispatch();
-  const requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Cool Photo App Camera Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      const OpenCamera = async () => {
-        const result = await launchCamera({ mediaType: 'photo' });
-        if (!result.didCancel) {
-          setPhoto(result);
-        }
+  const device: any = useCameraDevice('front')
+  const camera = useRef<Camera>(null);
+  const [imageData, setImageData] = useState('');
+  const [photoClicked, setPhotoClicked] = useState(false);
 
-      }
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  useEffect(() => {
+    checkPermission();
+  }, []);
 
-        console.log('You can use the camera');
-        OpenCamera();
+  // const requestCameraPermission = async () => {
+  //   try {
+  // if (Platform.OS == 'ios') {
 
-      } else {
-        console.log('Camera permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    };
+  //   if (device == null) return console.log('No camera device found in your ios mobile');
+
+  //   return (
+  //     <Camera
+  //       style={StyleSheet.absoluteFill}
+  //       device={device}
+  //       isActive={true}
+  //     />
+  //   ) 
+
+  // }
+  // else {
+
+
+  const checkPermission = async () => {
+
+    const newCameraPermission = await Camera.requestCameraPermission();
+    const newMicrophonePermission = await Camera.requestMicrophonePermission();
+    console.log(newCameraPermission);
+    if (device == null) { console.log("No camera found") }
+    if (camera.current) {
+      console.log(camera.current, "this is camera dot current")
+      const photo = await camera.current.takePhoto()
+
+      setImageData(photo.path);
+      setPhotoClicked(false);
+      console.log(photo.path, ">>>>>>>>////////////////////////////////////////<<<<<<<<<<<<<<");
+      
+    }
+
+ 
+
+    // }
+    // const granted = await PermissionsAndroid.request(
+    //   PermissionsAndroid.PERMISSIONS.CAMERA,
+    //   {
+    //     title: 'Cool Photo App Camera Permission',
+    //     message:
+    //       'Cool Photo App needs access to your camera ' +
+    //       'so you can take awesome pictures.',
+    //     buttonNeutral: 'Ask Me Later',
+    //     buttonNegative: 'Cancel',
+    //     buttonPositive: 'OK',
+    //   },
+    // );
+    // const OpenCamera = async () => {
+    //   const result = await launchCamera({ mediaType: 'photo' });
+    //   if (!result.didCancel) {
+    //     setPhoto(result);
+    //   }
+
+    // }
+    // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
+    //   console.log('You can use the camera');
+    //   OpenCamera();
+
+    // } else {
+    //   console.log('Camera permission denied');
+    // }
 
   }
+
+  //   } catch (err) {
+  //     console.warn(err);
+  //   };
+
+  // } 
+
 
   const addItem = () => {
     dispatch(addPost({
       name: name,
       price: price,
       desc: desc,
-      image: photo.assets[0].uri,
+      image: imageData,
       category: selectedCategory == 0
         ? 'Car' : selectedCategory == 1
           ? 'Bike' : selectedCategory == 2
@@ -82,22 +135,56 @@ const Add = ({ onPost }: any) => {
   };
   return (
     <ScrollView nestedScrollEnabled>
+
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Add Post</Text>
         </View>
-        <TouchableOpacity onPress={() => { requestCameraPermission() }}>
-          {photo.assets[0].uri == "" ? (<Image
-            source={require('../images/placeholder.jpeg')}
-            style={styles.imageView}
-          />) :
-            (<Image
-              source={{ uri: photo.assets[0].uri }}
-              style={styles.imageView}
-            />)}
+
+        {photoClicked ? (<View style={styles.imageBox}>
+          <Camera ref={camera}
+            style={StyleSheet.absoluteFill}
+            device={device}
+            isActive={true}
+            photo
+          />
+          <TouchableOpacity style={{
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            backgroundColor: '#FF0037',
+            position: 'absolute',
+            bottom: 8,
+            alignSelf: 'center'
+
+          }} onPress={() => { checkPermission() }}>
+            {
+              <Image
+                source={{ uri: 'file://' + imageData }}
+                style={styles.imageView}
+              />}
+
+          </TouchableOpacity>
+
+        </View>) : (
+          <View style={{
+            width: '90%', borderWidth: 1, alignSelf: 'center', borderRadius: 10, justifyContent: 'center', alignItems: 'center',
+            height: 50, marginTop: 20, paddingLeft: 20
+          }}>
+            {imageData !== '' &&
+              (
+                <Image source={{ uri: 'file://' + imageData }}
+                  style={{ flex: 1, width: '90%', height: 200 }}
+                />)
+            }
+            <TouchableOpacity >
+              <Text style={{ marginTop: 5 }} onPress={() => setPhotoClicked(true)}>Click Photo</Text>
+            </TouchableOpacity>
+          </View>
+
+        )}
 
 
-        </TouchableOpacity>
         <TextInput
           placeholder="Enter item name"
           style={styles.input}
@@ -117,6 +204,7 @@ const Add = ({ onPost }: any) => {
           value={price}
           onChangeText={txt => setPrice(txt)}
         />
+
         <Text style={[styles.title, { marginLeft: 20, marginTop: 20 }]}>Category</Text>
 
         <TouchableOpacity style={[styles.input, {
@@ -156,6 +244,7 @@ const Add = ({ onPost }: any) => {
           <Text style={{ color: '#fff', fontSize: 18 }}>Post my item</Text>
         </TouchableOpacity>
       </View>
+
     </ScrollView>
   )
 }
@@ -178,10 +267,10 @@ const styles = StyleSheet.create({
     color: '#000'
   },
   imageView: {
-    width: '90%',
+    width: '85%',
     height: 200,
     alignSelf: 'center',
-    marginTop: 20
+    marginTop: 60
   },
   input: {
     width: '90%',
@@ -191,6 +280,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     paddingLeft: 20
+  },
+  imageBox: {
+    width: '90%',
+    height: 250,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginTop: 20,
+    paddingLeft: 20
+
   },
   button: {
     width: '90%',

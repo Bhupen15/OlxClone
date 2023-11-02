@@ -35,7 +35,10 @@ const Search = () => {
           return (
 
             <TouchableOpacity style={styles.item}>
-              <Image source={{ uri: item.image }} style={styles.itemImage} />
+                    {item.image !==''&&
+              ( <Image source={{ uri: 'file://' + item.image }} style={styles.itemImage} />)
+          }
+              
               <View>
                 <Text style={styles.name}>{item.name}</Text>
                 <Text style={styles.desc}>{item.desc}</Text>
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: 60,
-    heigth: 60,
+    height: 60,
     marginLeft: 20,
     resizeMode: 'contain',
   },

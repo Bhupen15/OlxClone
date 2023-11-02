@@ -9,7 +9,7 @@ import { addToWishlist } from '../redux/WishlistSlice'
 
 const Home = () => {
   const navigator = useNavigation<any>();
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const items = useSelector((state: any) => state.post)
   console.log("This is image path", items.data.image);
   const DATA = [
@@ -20,6 +20,7 @@ const dispatch = useDispatch();
     { title: "Furniture", icon: require('../images/furniture.png') },
     { title: "House", icon: require('../images/home.png') }
   ]
+
   return (
     <ScrollView nestedScrollEnabled>
       <View style={styles.container}>
@@ -43,17 +44,22 @@ const dispatch = useDispatch();
         </View>
         <Text style={styles.heading}>Posted Items</Text>
         <FlatList data={items.data} renderItem={({ item, index }) => {
+          // console.log(item.)
           return (
 
             <TouchableOpacity style={styles.item}>
-              <Image source={{ uri: item.image }} style={styles.itemImage} />
+              {item.image !==''&&
+              ( <Image source={{ uri: 'file://' + item.image }} style={styles.itemImage} />)
+          }
+              
+              
               <View>
                 <Text style={styles.name}>{item.name}</Text>
                 <Text style={styles.desc}>{item.desc}</Text>
                 <Text style={styles.price}>{'INR. ' + item.price}</Text>
               </View>
-              <TouchableOpacity style={styles.wishlist} onPress={()=>{
-                    dispatch(addToWishlist(item))
+              <TouchableOpacity style={styles.wishlist} onPress={() => {
+                dispatch(addToWishlist(item))
               }}>
                 <Image source={require('../images/heart.png')} style={styles.icon} />
               </TouchableOpacity>
@@ -125,7 +131,7 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: 60,
-    heigth: 60,
+    height: 60,
     marginLeft: 20,
     resizeMode: 'contain',
   },
