@@ -12,7 +12,7 @@ const Search = () => {
 
   const filterList = (txt: any) => {
     let tempList = items.data;
-    console.log("This is text", txt)
+
     let temp = tempList.filter((item: any) => {
       return (item.name.toLowerCase().match(txt.toLowerCase()));
     })

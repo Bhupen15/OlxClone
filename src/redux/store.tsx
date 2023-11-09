@@ -1,10 +1,10 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import PostReducer from './PostSlice'
 import WishlistReducer from './WishlistSlice'
-import RemoveWishlistReducer from './WishlistSlice'
+
 import { persistReducer, persistStore } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import wishlist from "../tabs/Wishlist";
+
 
 
 const persistConfig = {
@@ -15,13 +15,18 @@ const persistConfig = {
   const rootreducer = combineReducers({
     post: PostReducer, 
     wishlist: WishlistReducer,
-    // removeWishlist: RemoveWishlistReducer
+   
   });
 
 
   
 export const store  = configureStore({
-    reducer: persistReducer(persistConfig, rootreducer)
+    reducer: persistReducer(persistConfig, rootreducer),
+  //    middleware: [
+  //   ...getDefaultMiddleware({
+  //     serializableCheck: false, 
+  //   }),
+  // ],
     
 });  
 

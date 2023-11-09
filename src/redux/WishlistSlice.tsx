@@ -14,8 +14,9 @@ export const WishlistSlice = createSlice({
         },
 
         removeWishlist(state: any, action) {
-            
+          
             const NewData = state.data.filter((item: any) => {
+                
                 return item.name !== action.payload
 
             });

@@ -12,7 +12,7 @@ const Home = () => {
   const navigator = useNavigation<any>();
   const dispatch = useDispatch();
   const items = useSelector((state: any) => state.post)
-  console.log("This is image path", items.data.image);
+  
   const DATA : dataType[] = [
     { title: "Car", icon: require('../images/car.png') },
     { title: "Bike", icon: require('../images/bike.png') },
