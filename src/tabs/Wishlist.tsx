@@ -11,34 +11,34 @@ const Wishlist = () => {
   // console.log(items.data.length);
 
   return (
-   
-      <View style={styles.container}>
-        <Text style={styles.WishProduct}>Wishlisted products</Text>
-        <View style={{ marginTop: 20 }}>
-          
-          <FlatList data={items.data} renderItem={({ item, index }) => {
-            return (
 
-              <TouchableOpacity style={styles.item}>
-                {item.image !== '' &&
-                  (<Image source={{ uri: 'file://' + item.image }} style={styles.itemImage} />)
-                }
+    <View style={styles.container}>
+      <Text style={styles.WishProduct}>Wishlisted products</Text>
+      <View style={{ marginTop: 20 }}>
 
-                <View style={{ width: 100 }}>
-                  <Text style={styles.name}>{item.name}</Text>
-                  <Text style={styles.desc}>{item.desc}</Text>
-                  <Text style={styles.price}>{'INR. ' + item.price}</Text>
-                </View>
-                <TouchableOpacity onPress={() => {
-                  dispatch(removeWishlist(item.name))
-                }}>
-                  <Image source={require('../images/close.png')} style={styles.icon} />
-                </TouchableOpacity>
+        <FlatList data={items.data} renderItem={({ item, index }) => {
+          return (
+
+            <TouchableOpacity style={styles.item}>
+              {item.image !== '' &&
+                (<Image source={{ uri: 'file://' + item.image }} style={styles.itemImage} />)
+              }
+
+              <View style={{ width: 100 }}>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.desc}>{item.desc}</Text>
+                <Text style={styles.price}>{'INR. ' + item.price}</Text>
+              </View>
+              <TouchableOpacity onPress={() => {
+                dispatch(removeWishlist(item.name))
+              }}>
+                <Image source={require('../images/close.png')} style={styles.icon} />
               </TouchableOpacity>
-            )
-          }} />
-        </View>
+            </TouchableOpacity>
+          )
+        }} />
       </View>
+    </View>
 
   )
 }

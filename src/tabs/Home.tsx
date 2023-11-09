@@ -9,7 +9,8 @@ import { dataType } from '../interface'
 
 
 const Home = () => {
-  const navigator = useNavigation<any>();
+  
+ const navigator = useNavigation<any>();
   const dispatch = useDispatch();
   const items = useSelector((state: any) => state.post)
   
@@ -21,7 +22,7 @@ const Home = () => {
     { title: "Furniture", icon: require('../images/furniture.png') },
     { title: "House", icon: require('../images/home.png') }
   ]
-
+ 
   return (
    
       <View style={styles.container}>

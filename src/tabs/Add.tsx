@@ -66,12 +66,12 @@ const Add = ({ onPost }: any) => {
     console.log(newCameraPermission);
     if (device == null) { console.log("No camera found") }
     if (camera.current) {
-      console.log(camera.current, "this is camera dot current")
+      // console.log(camera.current, "this is camera dot current")
       const photo = await camera.current.takePhoto()
 
       setImageData(photo.path);
       setPhotoClicked(false);
-      console.log(photo.path, ">>>>>>>>////////////////////////////////////////<<<<<<<<<<<<<<");
+      // console.log(photo.path, ">>>>>>>>////////////////////////////////////////<<<<<<<<<<<<<<");
       
     }
 
