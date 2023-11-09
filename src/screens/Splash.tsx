@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-const splash = () => {
+const Splash = () => {
   const navigator: any = useNavigation();
   useEffect(() => {
     setTimeout(() => {
@@ -20,7 +20,7 @@ const splash = () => {
   )
 }
 
-export default splash;
+export default Splash;
 
 const styles = StyleSheet.create({
   container: {

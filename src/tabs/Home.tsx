@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Image, TextInput, FlatList, TouchableOpacity, Dimensions, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, FlatList, TouchableOpacity, Dimensions, ScrollView, ImageSourcePropType } from 'react-native'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { addToWishlist } from '../redux/WishlistSlice'
+import { dataType } from '../interface'
 
 
 
@@ -12,7 +13,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const items = useSelector((state: any) => state.post)
   console.log("This is image path", items.data.image);
-  const DATA = [
+  const DATA : dataType[] = [
     { title: "Car", icon: require('../images/car.png') },
     { title: "Bike", icon: require('../images/bike.png') },
     { title: "Laptop", icon: require('../images/laptop.png') },
@@ -22,7 +23,7 @@ const Home = () => {
   ]
 
   return (
-    <ScrollView nestedScrollEnabled>
+   
       <View style={styles.container}>
         <Text style={styles.logo}>Olx Clone</Text>
         <View style={styles.searchBox}>
@@ -37,9 +38,9 @@ const Home = () => {
               return (
                 <TouchableOpacity style={styles.listItem} onPress={() => { navigator.navigate('ItemsByCategory', { category: item.title }) }}>
                   <Text style={{ margin: 7, fontWeight: '900', fontSize: 18 }}>{item.title}</Text>
-                  <Image source={item.icon} style={{ width: 50, height: 50 }} />
+                  <Image source={item.icon as ImageSourcePropType} style={{ width: 50, height: 50 }} />
                 </TouchableOpacity>
-              )
+             ) 
             }} />
         </View>
         <Text style={styles.heading}>Posted Items</Text>
@@ -68,7 +69,7 @@ const Home = () => {
           )
         }} />
       </View>
-    </ScrollView>
+   
   )
 }
 
@@ -76,7 +77,10 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    marginTop: 50,
+    marginBottom: 80
+
   },
   logo: {
     fontSize: 30,

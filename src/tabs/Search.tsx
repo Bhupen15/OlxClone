@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions, TextInput } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions, TextInput, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useRoute } from '@react-navigation/native';
@@ -20,6 +20,7 @@ const Search = () => {
 
   }
   return (
+
     <View style={styles.container}>
       <View style={styles.searchBox}>
         <TextInput placeholder="Search Items here.." style={styles.input}
@@ -49,6 +50,7 @@ const Search = () => {
         }} />
       </View>
     </View>
+  
   )
 }
 
@@ -56,18 +58,22 @@ export default Search;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    marginTop: 50,
+    marginBottom: 80
+    
   },
   logo: {
     fontSize: 30,
     fontWeight: '800',
     color: 'blue',
     marginTop: 20,
-    marginLeft: 20
+    marginLeft: 20,
+
   },
   searchBox: {
     alignSelf: 'center',
-    marginTop: 30,
+    marginTop: 60,
     borderWidth: 1,
     borderRadius: 10,
     width: '90%',

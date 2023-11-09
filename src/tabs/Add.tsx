@@ -253,7 +253,9 @@ export default Add
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    marginTop: 55,
+    marginBottom: 30
   },
   header: {
     width: '100%',
